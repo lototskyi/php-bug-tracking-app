@@ -2,3 +2,4 @@
 /docker-php-bug-tracking-report/logs
 /docker-php-bug-tracking-report/database/data/
 /public/vendor/
+/public/Src/Logger/*.log
