@@ -1,7 +1,11 @@
 <?php
 declare(strict_types = 1);
 
+use App\Helpers\Config;
+
 require_once __DIR__ . '/vendor/autoload.php';
+
+set_exception_handler([new \App\Exception\ExceptionHandler(), 'handle']);
 
 $application = new \App\Helpers\App();
 

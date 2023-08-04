@@ -4,10 +4,11 @@ declare(strict_types = 1);
 namespace App\Helpers;
 
 use DateTimeInterface, DateTime, DateTimeZone;
+use Exception;
 
 class App
 {
-    private $config = [];
+    private array $config = [];
 
     public function __construct()
     {
@@ -35,7 +36,7 @@ class App
     public function getLogPath(): string
     {
         if (!isset($this->config['log_path'])) {
-            throw new \Exception('Log path is not defined');
+            throw new Exception('Log path is not defined');
         }
 
         return $this->config['log_path'];
@@ -46,6 +47,9 @@ class App
         return (php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg');
     }
 
+    /**
+     * @throws Exception
+     */
     public function getServerTime(): DateTimeInterface
     {
         return new DateTime('now', new DateTimeZone('Europe/Kiev'));
