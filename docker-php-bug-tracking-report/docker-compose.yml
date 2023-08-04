@@ -24,7 +24,7 @@ services:
       - ../public:/var/www
       - ./php-fpm/php.local.ini:/usr/local/etc/php/conf.d/php.local.ini
     environment:
-      PHP_IDE_CONFIG: "serverName=docker-php-api"
+      PHP_IDE_CONFIG: "serverName=docker-php"
 
   nginx:
     build:

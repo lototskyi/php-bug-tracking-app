@@ -4,6 +4,7 @@ RUN apk add --update linux-headers
 RUN apk --update --no-cache add git
 
 RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install mysqli
 
 ###xdebug###
 RUN apk add --no-cache $PHPIZE_DEPS \
