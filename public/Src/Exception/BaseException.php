@@ -3,6 +3,7 @@
 namespace App\Exception;
 
 use Exception;
+use Throwable;
 
 abstract class BaseException extends Exception
 {
