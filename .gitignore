@@ -3,3 +3,5 @@
 /docker-php-bug-tracking-report/database/data/
 /public/vendor/
 /public/Src/Logger/*.log
+/public/.phpunit.result.cache
+/public/.phpunit.cache/
