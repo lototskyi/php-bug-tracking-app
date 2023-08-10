@@ -3,11 +3,6 @@ declare(strict_types = 1);
 
 namespace Tests\Units;
 
-use App\Database\MySQLiConnection;
-use App\Database\MySQLiQueryBuilder;
-use App\Database\PDOConnection;
-use App\Database\PDOQueryBuilder;
-use App\Helpers\Config;
 use App\Helpers\DbQueryBuilderFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +19,7 @@ class QueryBuilderTest extends TestCase
             ['db_name' => 'bug-report-testing']
         );
 
-        $this->querybuilder->getConnection()->beginTransaction();
+        $this->querybuilder->beginTransaction();
 
         parent::setUp();
     }
@@ -53,7 +48,7 @@ class QueryBuilderTest extends TestCase
             ->first();
 
         self::assertNotNull($result);
-        self::assertSame((int) $id, $result->id);
+        self::assertSame($id, $result->id);
     }
 
     public function testItCanPerformSelectQueryWithMultipleWhereClause()
@@ -68,13 +63,63 @@ class QueryBuilderTest extends TestCase
             ->first();
 
         self::assertNotNull($result);
-        self::assertSame((int) $id, $result->id);
+        self::assertSame($id, $result->id);
         self::assertSame('Report Type 1', $result->report_type);
+    }
+
+    public function testItCanFindById()
+    {
+        $id = $this->insertIntoTable();
+        $result = $this->querybuilder->table('reports')
+            ->select()->find($id);
+
+        self::assertNotNull($result);
+        self::assertSame($id, $result->id);
+        self::assertSame('Report Type 1', $result->report_type);
+    }
+
+    public function testItCanFindByGivenValues()
+    {
+        $id = $this->insertIntoTable();
+        $result = $this->querybuilder->table('reports')
+            ->select()->findOneBy('report_type', 'Report Type 1');
+
+        self::assertNotNull($result);
+        self::assertSame($id, $result->id);
+        self::assertSame('Report Type 1', $result->report_type);
+    }
+
+    public function testItCanUpdateByGivenRecord()
+    {
+        $id = $this->insertIntoTable();
+        $count = $this->querybuilder->table('reports')->update(
+            ['report_type' => 'Report Type 1 updated']
+        )->where('id', $id)->runQuery()->affected();
+
+        self::assertEquals(1, $count);
+
+        $result = $this->querybuilder->select()->findOneBy('report_type', 'Report Type 1 updated');
+
+        self::assertNotNull($result);
+        self::assertSame($id, $result->id);
+        self::assertSame('Report Type 1 updated', $result->report_type);
+    }
+
+    public function testItCanDeleteGivenId()
+    {
+        $id = $this->insertIntoTable();
+        $count = $this->querybuilder->table('reports')->delete()->where('id', $id)->runQuery()->affected();
+
+        self::assertEquals(1, $count);
+
+        $result = $this->querybuilder->select()->find($id);
+
+        self::assertNull($result);
     }
 
     public function tearDown(): void
     {
-        $this->querybuilder->getConnection()->rollback();
+        $this->querybuilder->rollback();
         parent::tearDown();
     }
 

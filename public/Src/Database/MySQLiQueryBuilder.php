@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Database;
 
@@ -19,8 +20,10 @@ class MySQLiQueryBuilder extends QueryBuilder
         $rows = [];
         if (!$this->resultSet) {
             $this->resultSet = $this->statement->get_result();
-            while ($obj = $this->resultSet->fetch_object()) {
-                $rows[] = $obj;
+            if ($this->resultSet) {
+                while ($obj = $this->resultSet->fetch_object()) {
+                    $rows[] = $obj;
+                }
             }
             $this->results = $rows;
         }
@@ -35,7 +38,7 @@ class MySQLiQueryBuilder extends QueryBuilder
         return $this->resultSet ? $this->resultSet->num_rows : false;
     }
 
-    public function lastInsertedId()
+    public function lastInsertedId(): int
     {
         return $this->connection->insert_id;
     }
@@ -115,5 +118,16 @@ class MySQLiQueryBuilder extends QueryBuilder
         }
 
         $this->results = $rows;
+    }
+
+    public function beginTransaction()
+    {
+        $this->connection->begin_transaction();
+    }
+
+    public function affected(): int
+    {
+        $this->statement->store_result();
+        return $this->statement->affected_rows;
     }
 }

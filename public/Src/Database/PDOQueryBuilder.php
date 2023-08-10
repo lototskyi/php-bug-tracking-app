@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Database;
 
@@ -17,9 +18,9 @@ class PDOQueryBuilder extends QueryBuilder
         return $this->statement->rowCount();
     }
 
-    public function lastInsertedId()
+    public function lastInsertedId(): int
     {
-        return $this->connection->lastInsertId();
+        return (int) $this->connection->lastInsertId();
     }
 
     public function prepare($query)
@@ -38,5 +39,15 @@ class PDOQueryBuilder extends QueryBuilder
     public function fetchInto($className)
     {
         return $this->statement->fetchAll(PDO::FETCH_CLASS, $className);
+    }
+
+    public function beginTransaction()
+    {
+        $this->connection->beginTransaction();
+    }
+
+    public function affected(): int
+    {
+        return $this->count();
     }
 }

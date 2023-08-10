@@ -110,12 +110,12 @@ abstract class QueryBuilder
 
     public function find(int $id)
     {
-        return $this->where('id', $id)->first();
+        return $this->where('id', $id)->runQuery()->first();
     }
 
     public function findOneBy(string $field, $value)
     {
-        return $this->where($field, $value)->first();
+        return $this->where($field, $value)->runQuery()->first();
     }
 
     public function first(): ?object
@@ -123,24 +123,25 @@ abstract class QueryBuilder
         return $this->count() ? $this->get()[0] : null;
     }
 
-    public function getConnection()
-    {
-        return $this->connection;
-    }
-
-    public function runQuery()
+    public function runQuery(): static
     {
         $query = $this->prepare($this->getQuery($this->operation));
         $this->statement = $this->execute($query);
         return $this;
     }
 
+    public function rollback(): void
+    {
+        $this->connection->rollback();
+    }
+
     abstract public function get();
     abstract public function count();
-    abstract public function lastInsertedId();
+    abstract public function lastInsertedId(): int;
     abstract public function prepare($query);
     abstract public function execute($statement);
     abstract public function fetchInto($className);
-
+    abstract public function beginTransaction();
+    abstract public function affected(): int;
 
 }
