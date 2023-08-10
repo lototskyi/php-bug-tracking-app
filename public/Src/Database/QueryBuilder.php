@@ -83,14 +83,22 @@ abstract class QueryBuilder
         return $this->lastInsertedId();
     }
 
-    public function update(array $data)
+    public function update(array $data): static
     {
+        $this->fields = [];
+        $this->operation = self::DML_TYPE_UPDATE;
 
+        foreach ($data as $column => $value) {
+            $this->fields[] = sprintf('%s%s%s', $column, self::OPERATORS[0], "'$value'");
+        }
+
+        return $this;
     }
 
-    public function delete()
+    public function delete(): static
     {
-
+        $this->operation = self::DML_TYPE_DELETE;
+        return $this;
     }
 
     public function raw(string $query): static
