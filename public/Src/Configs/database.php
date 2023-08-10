@@ -7,7 +7,7 @@ return [
         'db_name' => 'bug-report',
         'db_username' => 'appuser',
         'db_user_password' => 'apppassword',
-        'default_fetch' => PDO::FETCH_ASSOC
+        'default_fetch' => PDO::FETCH_OBJ
     ],
     'mysqli' => [
         'host' => 'database',
