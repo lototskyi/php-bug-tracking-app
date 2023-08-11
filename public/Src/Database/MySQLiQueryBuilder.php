@@ -40,7 +40,7 @@ class MySQLiQueryBuilder extends QueryBuilder
 
     public function lastInsertedId(): int
     {
-        return $this->connection->insert_id;
+        return (int) $this->connection->insert_id;
     }
 
     public function prepare($query)

@@ -132,7 +132,6 @@ class QueryBuilderTest extends TestCase
             'link' => 'https://link.com',
             'created_at' => date('Y-m-d H:i:s')
         ];
-        $id = $this->querybuilder->table('reports')->create($data);
-        return $id;
+        return $this->querybuilder->table('reports')->create($data);
     }
 }
